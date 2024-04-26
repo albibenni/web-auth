@@ -1,12 +1,12 @@
 {
-    "name": "Coffee Masters",
-    "short_name": "CoffeeMasters",
+    "name": "Albi's Auth",
+    "short_name": "AlbiAuth",
     "theme_color": "#43281C",
     "display": "standalone",
     "background_color": "#EFEFEF",
     "start_url": "/",
     "scope": "/",
-    "description": "The app for order at Coffee Masters, the best coffee shop in the Frontend world, by Frontend Masters.",
+    "description": "The app for the Albi's Auth service",
     "icons": [
         {
             "src": "images/icons/icon.png",
