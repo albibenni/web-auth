@@ -4,6 +4,41 @@ import Router from "./Router.js";
 const Auth = {
     isLoggedIn: false,
     account: null,
+    postLogin: (response, user) => {
+        if (response.ok){
+            Auth.isLoggedIn = true;
+            Auth.account = user;
+            Auth.updateStatus();
+            Router.go("/account");
+        } else {
+            alert(response.message); // usually ui lib would be used, not base alert
+        }
+    },
+    register: async (event) => {
+        event.preventDefault();
+        const user = {
+            name: document.getElementById("register_name").value,
+            email: document.getElementById("register_email").value,
+            password: document.getElementById("register_password").value
+        };
+        const response = await API.register(user);
+        Auth.postLogin(response, {
+            name: user.name,
+            email: user.email
+        });
+    },
+    login: async (event) => {
+        event.preventDefault();
+        const credentials = {
+            email: document.getElementById("login_email").value,
+            password: document.getElementById("login_password").value
+        };
+        const response = await API.login(credentials);
+        Auth.postLogin(response, {
+            email: response.email,
+            name: response.name
+        });
+    },
     updateStatus() {
         if (Auth.isLoggedIn && Auth.account) {
             document.querySelectorAll(".logged_out").forEach(
@@ -28,9 +63,9 @@ const Auth = {
             );
 
         }
-    },    
+    },
     init: () => {
-        
+
     },
 }
 Auth.updateStatus();

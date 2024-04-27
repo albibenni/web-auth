@@ -25,19 +25,17 @@ const expectedOrigin = `${protocol}://${rpID}:${port}`;
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({
-  extended: true
+    extended: true
 }));
 
 // ADD HERE THE REST OF THE ENDPOINTS
 
-
-
 app.get("*", (req, res) => {
-    res.sendFile(__dirname + "public/index.html"); 
+    res.sendFile(__dirname + "public/index.html");
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port ${port}`)
+    console.log(`App listening on port ${port}`)
 });
 
 app.post("/auth/login", (req, res) => {
@@ -45,23 +43,24 @@ app.post("/auth/login", (req, res) => {
     if (user) {
         // user exists, check password
         if (bcrypt.compareSync(req.body.password, user.password)) {
-            res.send({ok: true, email: user.email, name: user.name});
+            res.send({ ok: true, email: user.email, name: user.name });
         } else {
-            res.send({ok: false, message: 'Data is invalid'});            
+            res.send({ ok: false, message: 'Credentials are wrong.' }); // Credentials are wrong is a standard to avoid giving hakers information about what is wrong
         }
     } else {
         // User doesn't exist
-        res.send({ok: false, message: 'Data is invalid'});
+        res.send({ ok: false, message: 'Credentials are wrong.' }); // Credentials are wrong is a standard to avoid giving hakers information about what is wrong
     }
-}); 
+});
 
 function findUser(email) {
-    const results = db.data.users.filter(u=>u.email==email);
-    if (results.length==0) return undefined;
+    const results = db.data.users.filter(u => u.email == email);
+    if (results.length == 0) return undefined;
     return results[0];
 }
 
 app.post("/auth/register", (req, res) => {
+    // TODO: Add validation
     var salt = bcrypt.genSaltSync(10);
     var hash = bcrypt.hashSync(req.body.password, salt);
 
@@ -74,11 +73,11 @@ app.post("/auth/register", (req, res) => {
 
     if (userFound) {
         // User already registered
-        res.send({ok: false, message: 'User already exists'});
+        res.send({ ok: false, message: 'User already exists' });
     } else {
         // New User
         db.data.users.push(user);
         db.write();
-        res.send({ok: true});
+        res.send({ ok: true });
     }
 });
