@@ -5,7 +5,7 @@ const Auth = {
     isLoggedIn: false,
     account: null,
     postLogin: (response, user) => {
-        if (response.ok){
+        if (response.ok) {
             Auth.isLoggedIn = true;
             Auth.account = user;
             Auth.updateStatus();
@@ -38,6 +38,12 @@ const Auth = {
             email: response.email,
             name: response.name
         });
+    },
+    logout: () => {
+        Auth.isLoggedIn = false;
+        Auth.account = null;
+        Auth.updateStatus();
+        Router.go("/");
     },
     updateStatus() {
         if (Auth.isLoggedIn && Auth.account) {
