@@ -17,6 +17,11 @@ const Auth = {
         if (window.PasswordCredential && user.password) {
             const credential = new PasswordCredential({ id: user.email, password: user.password, name: user.name });
             navigator.credentials.store(credential);
+            try {
+                navigator.credentials.store(credential);
+            } catch (e) {
+                console.log(e);
+            }
         }
     },
     register: async (event) => {
@@ -30,7 +35,7 @@ const Auth = {
         Auth.postLogin(response, user);
     },
     login: async (event) => {
-        event.preventDefault();
+        event?.preventDefault();
         const credentials = {
             email: document.getElementById("login_email").value,
             password: document.getElementById("login_password").value
@@ -40,6 +45,14 @@ const Auth = {
             email: response.email,
             name: response.name
         });
+    },
+    autlogin: async () => {
+        if (window.PasswordCredential) {
+            const credential = await navigator.credentials.get({ password: true });
+            document.getElementById("login_email").value = credential.id;
+            document.getElementById("login_password").value = credential.password;
+            Auth.login();
+        }
     },
     logout: () => {
         Auth.isLoggedIn = false;
@@ -80,6 +93,7 @@ const Auth = {
     },
 }
 Auth.updateStatus();
+Auth.autlogin();
 
 export default Auth;
 
