@@ -24,6 +24,9 @@ const Auth = {
             }
         }
     },
+    loginFromGoogle: (data) => {
+        console.log(data);
+    },
     register: async (event) => {
         event.preventDefault();
         const user = {
