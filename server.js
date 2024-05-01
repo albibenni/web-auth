@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs';
 import * as jwtJsDecode from 'jwt-js-decode';
 import base64url from "base64url";
 import SimpleWebAuthnServer from '@simplewebauthn/server';
+import { truncate } from 'fs';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -36,6 +37,33 @@ app.get("*", (req, res) => {
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
+});
+
+app.post("/auth/login-google", (req, res) => {
+    const jwt = jwtJsDecode.jwtDecode(req.body.credential);
+    const user = {
+        email: jwt.payload.email,
+        name: jwt.payload.given_name + " " + jwt.payload.family_name,
+        password: undefined
+    };
+    const userFound = findUser(user.email);
+    if (userFound) {
+        user.federated = {
+            google: jwt.payload.aud
+        };
+        db.write();
+        res.send({ ok: true, name: user.name, email: user.email });
+    } else {
+        db.data.users.push({
+            ...user,
+            federated: {
+                google: jwt.payload.aud
+            }
+        })
+        db.write();
+        res.send({ ok: true, name: user.name, email: user.email });
+    }
+    
 });
 
 app.post("/auth/login", (req, res) => {
