@@ -25,7 +25,7 @@ const Auth = {
         }
     },
     loginFromGoogle: async (data) => {
-        const response = await API.loginFromGoogle({ credential: data.credential});
+        const response = await API.loginFromGoogle({ credential: data.credential });
         Auth.postLogin(response,
             {
                 name: response.name,
@@ -58,9 +58,11 @@ const Auth = {
     autlogin: async () => {
         if (window.PasswordCredential) {
             const credential = await navigator.credentials.get({ password: true });
-            document.getElementById("login_email").value = credential.id;
-            document.getElementById("login_password").value = credential.password;
-            Auth.login();
+            if (credential) {
+                document.getElementById("login_email").value = credential.id;
+                document.getElementById("login_password").value = credential.password;
+                Auth.login();
+            }
         }
     },
     logout: () => {
