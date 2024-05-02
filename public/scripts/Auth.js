@@ -25,7 +25,7 @@ const Auth = {
         }
     },
     loginFromGoogle: async (data) => {
-        const response = await API.loginFromGoogle({ credential: data });
+        const response = await API.loginFromGoogle({ credential: data.credential});
         Auth.postLogin(response,
             {
                 name: response.name,
