@@ -20,6 +20,9 @@
 
     <script src="scripts/app.js" type="module"></script>
 
+    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser@6.2.2/dist/bundle/index.umd.min.js"></script> 
+
 </head>
 
 <body>
@@ -32,7 +35,6 @@
             <a class="navlink material-symbols-outlined" id="linkOrder" href="/account">
                 account_box
             </a>
-            <script src="https://accounts.google.com/gsi/client" async></script>
             <script>
                 function loginFromGoogle(data) {
                     Auth.loginFromGoogle(data)
@@ -121,6 +123,7 @@
                 <dd class="account_username"></dd>
             </dl>
 
+            <button onclick="Auth.addWebAuthn()">Add Authenticator / Passkey</button>
             <button onclick="Auth.logout()">Log out</button>
         </section>
     </main>
