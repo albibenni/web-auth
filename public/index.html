@@ -83,9 +83,13 @@
                 <fieldset>
                     <label for="login_email">Email</label>
                     <input id="login_email" required autocomplete="username">
-                    <label for="login_password">Password</label>
-                    <input type="password" id="login_password" autocomplete="current-password" required>
-                    >
+                    <section hidden id='login_section_password'>
+                        <label for="login_password">Password</label>
+                        <input type="password" id="login_password" autocomplete="current-password" required>
+                    </section>
+                    <section hidden id="login_section_webauthn">
+
+                    </section>
                 </fieldset>
                 <button>Continue</button>
 

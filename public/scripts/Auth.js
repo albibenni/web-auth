@@ -43,17 +43,38 @@ const Auth = {
         const response = await API.register(user);
         Auth.postLogin(response, user);
     },
+    checkAuthOptions: async () => {
+        const response = await API.checkAuthOptions({
+            email: document.getElementById("login_email").value
+        });
+        Auth.loginStep = 2;
+        if (response.password) {
+            document.getElementById("login_section_password").hidden = false;
+        }
+        if (response.webauthn) {
+
+            document.getElementById("login_section_webauthn").hidden = false;
+        }
+
+    },
     login: async (event) => {
         event?.preventDefault();
-        const credentials = {
-            email: document.getElementById("login_email").value,
-            password: document.getElementById("login_password").value
-        };
-        const response = await API.login(credentials);
-        Auth.postLogin(response, {
-            email: response.email,
-            name: response.name
-        });
+
+        if (Auth.loginStep == 1) {
+
+            Auth.checkAuthOptions();
+        } else {
+
+            const credentials = {
+                email: document.getElementById("login_email").value,
+                password: document.getElementById("login_password").value
+            };
+            const response = await API.login(credentials);
+            Auth.postLogin(response, {
+                email: response.email,
+                name: response.name
+            });
+        }
     },
     autlogin: async () => {
         if (window.PasswordCredential) {
@@ -99,8 +120,10 @@ const Auth = {
 
         }
     },
+    loginStep: 1,
     init: () => {
-
+        document.getElementById("login_section_password").hidden = true;
+        document.getElementById("login_section_webauthn").hidden = true;
     },
 }
 Auth.updateStatus();

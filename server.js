@@ -7,6 +7,7 @@ import * as jwtJsDecode from 'jwt-js-decode';
 import base64url from "base64url";
 import SimpleWebAuthnServer from '@simplewebauthn/server';
 import { truncate } from 'fs';
+import { request } from 'http';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
@@ -37,6 +38,21 @@ app.get("*", (req, res) => {
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`)
+});
+
+app.post("/auth/auth-options", (req, res) => {
+    const userFound = findUser(req.body.email);
+    if (userFound){
+        res.send({
+            password: userFound.password!=false,
+            google: userFound.federated && userFound.federated.google,
+            webauthn: userFound.webauthn
+        });
+    } else {
+        res.send({
+            password: true
+        });
+    }
 });
 
 app.post("/auth/login-google", (req, res) => {

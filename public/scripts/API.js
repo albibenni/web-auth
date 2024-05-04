@@ -4,6 +4,9 @@ const API = {
     login: async (user) => {
         return await API.makePostRequest(API.endpoint + "login", user);
     },
+    checkAuthOptions: async (user) => {
+        return await API.makePostRequest(API.endpoint + "auth-options", user);
+    },
     register: async (user) => {
         return await API.makePostRequest(API.endpoint + "register", user);
     },
